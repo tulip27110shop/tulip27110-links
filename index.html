@@ -23,6 +23,8 @@
     --rose-soft: #FBE4E8;
     --gold: #C98A2E;
     --gold-soft: #F6E8D1;
+    --plum: #7A5CC9;
+    --plum-soft: #EDE7F8;
     --line: #F0E2DB;
     --shadow: rgba(60, 30, 25, 0.08);
   }
@@ -39,6 +41,8 @@
       --rose-soft: #3B2227;
       --gold: #E8B35C;
       --gold-soft: #3C2F1C;
+      --plum: #C9B4F0;
+      --plum-soft: #2E2440;
       --line: #3A2A2D;
       --shadow: rgba(0, 0, 0, 0.35);
     }
@@ -55,6 +59,8 @@
     --rose-soft: #3B2227;
     --gold: #E8B35C;
     --gold-soft: #3C2F1C;
+    --plum: #C9B4F0;
+    --plum-soft: #2E2440;
     --line: #3A2A2D;
     --shadow: rgba(0, 0, 0, 0.35);
   }
@@ -149,9 +155,12 @@
     border: 1px solid var(--line);
     border-radius: 999px;
     padding: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
+  .tabs::-webkit-scrollbar{ display: none; }
   .tab{
-    flex: 1;
+    flex: 0 0 auto;
     font-family: inherit;
     font-size: 12px;
     font-weight: 600;
@@ -159,7 +168,7 @@
     background: transparent;
     border: none;
     border-radius: 999px;
-    padding: 9px 2px;
+    padding: 9px 12px;
     cursor: pointer;
     white-space: nowrap;
   }
@@ -246,6 +255,7 @@
   }
   .tag.men{ color: var(--gold); background: var(--gold-soft); }
   .tag.gift{ color: var(--rose-strong); background: var(--gold-soft); }
+  .tag.beauty{ color: var(--plum); background: var(--plum-soft); }
 
   .price{
     font-size: 12px;
@@ -374,12 +384,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="search" type="text" placeholder="Tìm theo phong cách, brand..." autocomplete="off">
     </div>
-    <div class="tabs" id="tabs" role="tablist">
-      <button class="tab" role="tab" aria-selected="true" data-filter="all">Tất cả</button>
-      <button class="tab" role="tab" aria-selected="false" data-filter="Đồ nữ">Đồ nữ</button>
-      <button class="tab" role="tab" aria-selected="false" data-filter="Đồ nam">Đồ nam</button>
-      <button class="tab" role="tab" aria-selected="false" data-filter="Quà tặng">Quà tặng Nam</button>
-    </div>
+    <div class="tabs" id="tabs" role="tablist"></div>
   </div>
 
   <p class="count-line"><strong id="count">0</strong> lựa chọn phù hợp</p>
@@ -399,8 +404,8 @@
         "style": "Clean girl / Thanh lịch",
         "brand": "Mia Ritta",
         "cat": "Đồ nữ",
-        "note": "Đồ basic lịch sự, tôn dáng, chất vải đứng form tốt; hợp đi làm, đi chơi.",
-        "price": "150k - 350k",
+        "note": "Đồ basic lịch sự, tôn dáng, có gu, chất vải đứng form tốt; hợp đi làm, đi chơi, giá hơi mắc xíu",
+        "price": "550-1tr",
         "link": "https://s.shopee.vn/904yvntZoz"
     },
     {
@@ -828,6 +833,166 @@
         "link": "https://s.shopee.vn/50ZkFbV6MV"
     },
     {
+        "style": "Basic",
+        "brand": "EnEnxinh",
+        "cat": "Đồ nữ",
+        "note": "Chuyên áo thun, quần ống rộng và các item basic mặc hàng ngày cực dễ phối.",
+        "price": "100K+",
+        "link": "https://s.shopee.vn/AUugpebJHX"
+    },
+    {
+        "style": "Đồ ngủ cute",
+        "brand": "Chuyên đồ ngủ Kawaii Sleepwear",
+        "cat": "Đồ nữ",
+        "note": "Các set đồ bộ mặc nhà, pijama lụa/thun họa tiết dễ thương, thoải mái.",
+        "price": "100K+",
+        "link": "https://s.shopee.vn/9KijRVfkeK"
+    },
+    {
+        "style": "Điệu đà/ năng động",
+        "brand": "XIXI FASHION VN",
+        "cat": "Đồ nữ",
+        "note": "Áo kiểu phối nơ, chân váy ngắn, set đồ mix sẵn trẻ trung bắt trend tốt.",
+        "price": "100K+",
+        "link": "https://s.shopee.vn/9V29dof7JN"
+    },
+    {
+        "style": "Thanh lịch / Nữ tính",
+        "brand": "VanAnh Boutique",
+        "cat": "Đồ nữ",
+        "note": "Chuyên các mẫu đầm thiết kế, set váy áo thanh lịch phù hợp đi làm hoặc đi dạo phố.",
+        "price": "100K+",
+        "link": "https://s.shopee.vn/9fLZq7eTyQ"
+    },
+    {
+        "style": "Hiện đại / Trẻ trung",
+        "brand": "Miastore1.vn",
+        "cat": "Đồ nữ",
+        "note": "Váy đầm dạo phố, áo sơ mi kiểu cách và các item mặc daily hiện đại, nữ tính.",
+        "price": "100K+",
+        "link": "https://s.shopee.vn/9pf02QdqdT"
+    },
+    {
+        "style": "Modern Room",
+        "brand": "Dễ thương / Cute",
+        "cat": "Đồ nữ",
+        "note": "Đồ siêu dễ thương, nằm trong list shop đi học giá hạt dẻ không đại trà.",
+        "price": "100k - 250k",
+        "link": "https://s.shopee.vn/1BN4yDvahB"
+    },
+    {
+        "style": "Eighteen Again",
+        "brand": "Đi học",
+        "cat": "Đồ nữ",
+        "note": "Nằm trong top list shop đồ đi học giá hạt dẻ, không đại trà, không quá hở được recommend.",
+        "price": "150k - 300k",
+        "link": "https://s.shopee.vn/gQoNIxUi6"
+    },
+    {
+        "style": "Dora The Label",
+        "brand": "Đi học",
+        "cat": "Đồ nữ",
+        "note": "Nằm trong top list shop đồ đi học giá hạt dẻ, không đại trà, không quá hở được recommend.",
+        "price": "150k - 300k",
+        "link": "https://s.shopee.vn/qkEZbwrN9"
+    },
+    {
+        "style": "Areum",
+        "brand": "Đi học",
+        "cat": "Đồ nữ",
+        "note": "Nằm trong top list shop đồ đi học giá hạt dẻ, không đại trà, không quá hở được recommend.",
+        "price": "150k - 300k",
+        "link": "https://s.shopee.vn/4LK6k2jXGq"
+    },
+    {
+        "style": "Dawn",
+        "brand": "Nhẹ nhàng",
+        "cat": "Đồ nữ",
+        "note": "Style nhẹ nhàng, thuộc list shop đồ đi học giá hạt dẻ không đại trà được recommend.",
+        "price": "150k - 300k",
+        "link": "https://s.shopee.vn/4VdWwLitvt"
+    },
+    {
+        "style": "Midmx Store",
+        "brand": "Áo thun/ basic",
+        "cat": "Đồ nam, Đồ nữ",
+        "note": "Vibe học sinh Hàn Quốc đi học nhưng chưa quá Tây, người bình luận mới phát hiện ra shop này.",
+        "price": "200k - 400k",
+        "link": "https://s.shopee.vn/40hGLQknwo"
+    },
+    {
+        "style": "DW (Daniel Wellington)",
+        "brand": "Đồng hồ / Minimalist",
+        "cat": "Phụ kiện",
+        "note": "Chuyên đồng hồ chính hãng thiết kế tối giản, dây da/thép mỏng nhẹ; hợp tặng dịp đặc biệt vì vừa sang vừa không quá phô trương.",
+        "price": "1.5tr - 3tr",
+        "link": "https://s.shopee.vn/4B0gXjkAbr"
+    },
+    {
+        "style": "Son",
+        "brand": "Son Merzy",
+        "cat": "Mỹ phẩm",
+        "note": "Bảng màu trẻ trung, dễ dùng và không kén nền da. Độ bám màu siêu đỉnh, uống nước không bị trôi.",
+        "price": "Bình dân (150k - 200k)",
+        "link": "https://s.shopee.vn/5q93q0Fele"
+    },
+    {
+        "style": "Son",
+        "brand": "Son Dior",
+        "cat": "Mỹ phẩm",
+        "note": "Dưỡng môi cực tốt, không làm khô hay thâm môi. Đẳng cấp khác biệt và hoàn toàn xứng đáng đầu tư.",
+        "price": "High-end (Cao cấp)",
+        "link": "https://s.shopee.vn/5fpddhGI6d"
+    },
+    {
+        "style": "Kem nền",
+        "brand": "Kem nền Dior",
+        "cat": "Mỹ phẩm",
+        "note": "Lớp nền siêu tệp da, bám cực chắc xuyên suốt 24h dù hoạt động mạnh. Không lem, không trôi và không gây mụn ẩn.",
+        "price": "High-end (Cao cấp)",
+        "link": "https://s.shopee.vn/60SU2JF1Qj"
+    },
+    {
+        "style": "Son",
+        "brand": "Son YSL",
+        "cat": "Mỹ phẩm",
+        "note": "Khắc phục cực tốt tình trạng môi siêu khô. Tuy nhiên dòng lì hay bị trôi nham nhở và dễ bị dính son vào răng.",
+        "price": "1.000k - 1.350k",
+        "link": "https://s.shopee.vn/6AluEcEO5k"
+    },
+    {
+        "style": "Son",
+        "brand": "Son MAC",
+        "cat": "Mỹ phẩm",
+        "note": "Hiệu ứng lên màu cực kỳ đẹp mắt, được đánh giá cao hơn hẳn YSL về mặt thẩm mỹ.",
+        "price": "High-end (Cao cấp)",
+        "link": "https://s.shopee.vn/6VOkdED7Pq"
+    },
+    {
+        "style": "Son",
+        "brand": "Son Romand",
+        "cat": "Mỹ phẩm",
+        "note": "Màu lên đẹp và bám màu siêu tốt, rẻ nhưng chất lượng. Cần lưu ý có thể gây sưng rát môi với người có cơ địa nhạy cảm khi ăn cay.",
+        "price": "Bình dân (100k - 200k)",
+        "link": "https://s.shopee.vn/113o5Fcf5n"
+    },
+    {
+        "style": "Son",
+        "brand": "Son Bbia",
+        "cat": "Mỹ phẩm",
+        "note": "Chất lượng ở mức bình dân. Trải nghiệm trên môi không được đánh giá cao và khó sánh được với hàng highend.",
+        "price": "Bình dân (100k - 200k)",
+        "link": "https://s.shopee.vn/30osSsw2Un"
+    },
+    {
+        "style": "Son",
+        "brand": "Son Lancome, Chanel, Hermes",
+        "cat": "Mỹ phẩm",
+        "note": "Bám màu siêu kém, chỉ cần uống nước là có thể trôi ngay. Màu son bị nhận xét là hơi già và kén nền môi gốc.",
+        "price": "High-end (Cao cấp)",
+        "link": "https://s.shopee.vn/2qVSGZwfpm"
+    },
+    {
         "style": "Quà tặng cho Nam",
         "brand": "Đồng hồ Casio",
         "cat": "Quà tặng",
@@ -914,13 +1079,94 @@
         "note": "",
         "price": "",
         "link": "https://s.shopee.vn/6fhi7wkVJS"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Áo đôi sweeter, nữ lệch vai nhún bèo, nam sweater",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/80DPU3bcl3"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Áo thun đôi Người Tình Hợp Lý",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/8V9g4yZikA"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Quần tây nam ống suông",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/8KqFsfaM59"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Combo quần sịp nam",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/AAHu42TNMW"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Áo thun đi tập gym",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/9zyTrjU0hV"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Set 10 đôi tất trắng",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/3g4QK7Vab2"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Ví nam cao cấp Artino sang xịn mịn",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/3qNqWQUxG5"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Áo sơ mi nam cuban mát",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/3LRZvVWrH0"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Bộ ba khăn tắm xịn",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/3Vl07oWDw3"
+    },
+    {
+        "style": "Quà tặng cho Nam",
+        "brand": "Lego cây thông giáng sinh",
+        "cat": "Quà tặng",
+        "note": "",
+        "price": "",
+        "link": "https://s.shopee.vn/BUY9hreWw"
     }
 ];
 
   const SHEET_ID = "1W41kcOQO3v_1oZIZ_pe3urvyKqJb5Vx2sQNUh2jxGP4";
   const SHEET_TABS = {
-    main: "0",          // tab Tổng hợp shop
-    gift: "798213082"   // tab Quà tặng cho Nam
+    main: "0",             // tab Tổng hợp shop
+    gift: "798213082",     // tab Quà tặng cho Nam
+    beauty: "1763419091"   // tab Mỹ phẩm đang tiền
   };
 
   let SHOPS = FALLBACK_SHOPS.slice();
@@ -1009,6 +1255,29 @@
     return out;
   }
 
+  // Tab Mỹ phẩm: Tên sản phẩm | BRAND | Phân loại | Ghi chú | Phân khúc giá | Link
+  function parseBeautyTab(rows){
+    if (!rows.length) return [];
+    const H = rows[0];
+    const iP = pickCol(H, ["Tên sản phẩm", "Sản phẩm"], 0), iB = pickCol(H, ["BRAND"], 1),
+          iC = pickCol(H, ["Phân loại"], 2), iN = pickCol(H, ["Ghi chú"], 3),
+          iPr = pickCol(H, ["Phân khúc giá"], 4), iL = pickCol(H, ["Link"], 5);
+    const out = [];
+    for (const r of rows.slice(1)){
+      const link = cleanCell(r[iL] || "");
+      if (!/^https?:\/\//i.test(link)) continue;
+      out.push({
+        style: cleanCell(r[iC] || "") || "Mỹ phẩm",
+        brand: cleanCell(r[iP] || "") || cleanCell(r[iB] || "") || "Mỹ phẩm",
+        cat: "Mỹ phẩm",
+        note: cleanCell(r[iN] || ""),
+        price: cleanCell(r[iPr] || ""),
+        link
+      });
+    }
+    return out;
+  }
+
   function fetchTab(gid){
     const url = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
       "/gviz/tq?tqx=out:csv&gid=" + gid + "&t=" + Date.now();
@@ -1031,10 +1300,13 @@
   async function loadSheet(){
     const status = document.getElementById("sync-status");
     try{
-      const [main, gift] = await Promise.all([fetchTab(SHEET_TABS.main), fetchTab(SHEET_TABS.gift)]);
-      const merged = mergeShops([parseMainTab(main), parseGiftTab(gift)]);
+      const [main, gift, beauty] = await Promise.all([
+        fetchTab(SHEET_TABS.main), fetchTab(SHEET_TABS.gift), fetchTab(SHEET_TABS.beauty)
+      ]);
+      const merged = mergeShops([parseMainTab(main), parseGiftTab(gift), parseBeautyTab(beauty)]);
       if (merged.length){
         SHOPS = merged;
+        buildTabs();
         render();
       }
       status.textContent = "tự động cập nhật lúc " +
@@ -1053,6 +1325,27 @@
 
   let activeFilter = "all";
 
+  // Dựng nút lọc theo đúng các nhóm có trong dữ liệu — nhóm mới thêm vào sheet tự xuất hiện.
+  // Nhóm ghi ghép kiểu "Đồ nam, Đồ nữ" được tách thành các nút lọc riêng lẻ.
+  function buildTabs(){
+    const cats = [];
+    for (const s of SHOPS){
+      for (const part of s.cat.split(",")){
+        const c = part.trim();
+        if (c && !cats.includes(c)) cats.push(c);
+      }
+    }
+    const order = ["Đồ nữ", "Đồ nam", "Mỹ phẩm", "Phụ kiện", "Quà tặng"];
+    cats.sort((a, b) => {
+      const ia = order.indexOf(a), ib = order.indexOf(b);
+      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    });
+    if (activeFilter !== "all" && !cats.includes(activeFilter)) activeFilter = "all";
+    tabsEl.innerHTML =
+      `<button class="tab" role="tab" aria-selected="${activeFilter === "all"}" data-filter="all">Tất cả</button>` +
+      cats.map(c => `<button class="tab" role="tab" aria-selected="${activeFilter === c}" data-filter="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join("");
+  }
+
   // Thumbnail = gradient theo tên brand + icon loại + chữ cái đầu, thay cho ảnh thật
   // (Shopee không cho lấy ảnh tự động, dùng monogram cho tới khi có ảnh thật)
   const GRADIENTS = [
@@ -1067,6 +1360,7 @@
     women: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-5-4.2-5-9a5 5 0 0 1 10 0c0 4.8-5 9-5 9Z"/><path d="M12 12V3"/><path d="M9 6c0-1.5 1.5-3 3-3s3 1.5 3 3"/></svg>',
     men: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3 3 2 3-2 3 3-2 2v12a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1V8L6 6Z"/></svg>',
     gift: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="1"/><path d="M4 9h16M12 9v11M12 9c-1.6 0-4-1-4-3.2A2.3 2.3 0 0 1 10.3 3C12 3 12 6 12 9Zm0 0c1.6 0 4-1 4-3.2A2.3 2.3 0 0 0 13.7 3C12 3 12 6 12 9Z"/></svg>',
+    beauty: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 11V4.8c0-.5.6-.9 1-.6l3.4 2.3c.3.2.4.5.4.8V11"/><rect x="8" y="11" width="8" height="4" rx="0.5"/><path d="M8.5 15h7v6h-7z"/></svg>',
   };
 
   function hashStr(str){
@@ -1077,7 +1371,7 @@
 
   function thumbHtml(s){
     const [c1, c2] = GRADIENTS[hashStr(s.brand) % GRADIENTS.length];
-    const icon = s.cat === "Quà tặng" ? ICONS.gift : s.cat === "Đồ nam" ? ICONS.men : ICONS.women;
+    const icon = s.cat === "Quà tặng" ? ICONS.gift : s.cat === "Đồ nam" ? ICONS.men : s.cat === "Mỹ phẩm" ? ICONS.beauty : ICONS.women;
     const initial = s.brand.trim().charAt(0).toUpperCase();
     return `<div class="thumb" style="background:linear-gradient(155deg, ${c1}, ${c2})">
       ${icon}
@@ -1088,7 +1382,7 @@
   function render(){
     const q = searchEl.value.trim().toLowerCase();
     const items = SHOPS.filter(s => {
-      if (activeFilter !== "all" && s.cat !== activeFilter) return false;
+      if (activeFilter !== "all" && !s.cat.split(",").map(t => t.trim()).includes(activeFilter)) return false;
       if (!q) return true;
       return (s.style + " " + s.brand + " " + s.note).toLowerCase().includes(q);
     });
@@ -1097,7 +1391,7 @@
     emptyEl.hidden = items.length !== 0;
 
     listEl.innerHTML = items.map(s => {
-      const tagClass = s.cat === "Quà tặng" ? "gift" : s.cat === "Đồ nam" ? "men" : "";
+      const tagClass = s.cat === "Quà tặng" ? "gift" : s.cat === "Đồ nam" ? "men" : s.cat === "Mỹ phẩm" ? "beauty" : "";
       return `
       <a class="card" href="${escapeHtml(s.link)}" target="_blank" rel="nofollow noopener">
         ${thumbHtml(s)}
@@ -1127,6 +1421,7 @@
     render();
   });
 
+  buildTabs();
   render();      // hiện bản lưu sẵn ngay lập tức
   loadSheet();   // rồi tải bản mới nhất từ Google Sheet
 
