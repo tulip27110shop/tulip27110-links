@@ -1,7 +1,7 @@
 // TỰ SINH BỞI sync.mjs — ĐỪNG SỬA TAY.
 // Nguồn: Google Sheet, các tab: "Quà tặng ny", "Tổng hợp", "Mỹ phẩm đáng tiền", "Phụ kiện"
 window.TULIP_DATA = {
-  "updated": "2026-10-20T04:13:06.716Z",
+  "updated": "2026-10-20T04:18:41.362Z",
   "sheetId": "1W41kcOQO3v_1oZIZ_pe3urvyKqJb5Vx2sQNUh2jxGP4",
   "tabs": [
     {
