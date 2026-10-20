@@ -149,14 +149,25 @@ async function main() {
   }
   if (failed.length) throw new Error('Tab lỗi, giữ nguyên data.js cũ: ' + failed.join(', '));
 
-  const data = {
-    updated: new Date().toISOString(),
+  const payload = {
     sheetId: SHEET_ID,
     tabs: tabs.map((t) => ({ name: t.name, gid: t.gid })),
     shops,
   };
+
+  // Chỉ ghi khi nội dung (tab + shop) khác bản hiện có — tránh commit rác mỗi lần chạy.
+  try {
+    const prev = await fs.readFile('data.js', 'utf8');
+    const old = JSON.parse(prev.slice(prev.indexOf('{'), prev.lastIndexOf('}') + 1));
+    if (JSON.stringify({ tabs: old.tabs, shops: old.shops }) === JSON.stringify({ tabs: payload.tabs, shops: payload.shops })) {
+      console.log('Sheet chưa có gì mới (tab + dữ liệu giống hệt), giữ nguyên data.js.');
+      return;
+    }
+  } catch { /* chưa có data.js -> ghi mới */ }
+
+  const out = { updated: new Date().toISOString(), ...payload };
   const js = '// TỰ SINH BỞI sync.mjs — ĐỪNG SỬA TAY.\n// Nguồn: Google Sheet, các tab: "' + tabs.map((t) => t.name).join('", "') + '"\n'
-    + 'window.TULIP_DATA = ' + JSON.stringify(data, null, 2) + ';\n';
+    + 'window.TULIP_DATA = ' + JSON.stringify(out, null, 2) + ';\n';
   await fs.writeFile('data.js', js, 'utf8');
   console.log(`Đồng bộ xong: ${shops.length} link từ ${tabs.length} tab -> data.js.`);
 }
