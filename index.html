@@ -72,66 +72,85 @@
   }
 
   *{ box-sizing: border-box; }
+  html{ height: 100%; }
   body{
     background: var(--bg);
     color: var(--ink);
     font-family: "DM Sans", system-ui, sans-serif;
-    padding-inline: 16px;
-    padding-block: 28px 48px;
+    padding: 14px 16px 10px;
     display: flex;
     justify-content: center;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
   }
-  .page{ width: 100%; max-width: 480px; }
+  /* Bố cục một màn hình: tiêu đề + ô tìm + lọc cố định, danh sách cuộn bên trong */
+  .page{
+    width: 100%;
+    max-width: 1080px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
 
-  /* ---------- header ---------- */
+  /* ---------- header: logo + tên xếp ngang, gọn ---------- */
+  .head{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
   .brand-mark{
-    width: 46px; height: 46px;
-    border-radius: 14px;
+    width: 38px; height: 38px;
+    border-radius: 12px;
     background: linear-gradient(155deg, var(--rose) 0%, #F28FA3 100%);
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 14px;
+    margin: 0;
+    flex-shrink: 0;
     box-shadow: 0 8px 20px -8px var(--shadow);
   }
-  .brand-mark svg{ width: 24px; height: 24px; display:block; }
+  .brand-mark svg{ width: 20px; height: 20px; display:block; }
+  .head-text{ min-width: 0; }
 
   .handle{
-    text-align: center;
-    font-size: 13px;
+    font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.05em;
     color: var(--rose-strong);
-    margin: 0 0 6px;
+    margin: 0 0 2px;
   }
   h1{
     font-family: "Fraunces", serif;
     font-weight: 600;
-    font-size: 30px;
+    font-size: 21px;
     line-height: 1.15;
-    text-align: center;
-    text-wrap: balance;
-    margin: 0 0 8px;
+    margin: 0;
   }
   .sub{
     text-align: center;
     color: var(--ink-muted);
-    font-size: 14px;
-    line-height: 1.5;
-    margin: 0 auto 22px;
-    max-width: 340px;
-    text-wrap: balance;
+    font-size: 12.5px;
+    line-height: 1.45;
+    margin: 0 0 10px;
+    flex-shrink: 0;
   }
 
-  /* ---------- controls ---------- */
+  /* ---------- controls: ô tìm + hàng lọc nằm ngang cùng dòng ---------- */
   .controls{
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 10px;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
   }
   .search-wrap{
     position: relative;
     display: flex;
     align-items: center;
+    flex: 0 1 280px;
   }
   .search-wrap svg{
     position: absolute;
@@ -163,6 +182,8 @@
     padding: 4px;
     overflow-x: auto;
     scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
   }
   .tabs::-webkit-scrollbar{ display: none; }
   .tab{
@@ -183,27 +204,30 @@
     color: #fff;
   }
 
-  .count-line{
-    text-align: center;
-    font-size: 12.5px;
-    color: var(--ink-muted);
-    margin: 14px 0 12px;
-  }
-  .count-line strong{ color: var(--ink); font-variant-numeric: tabular-nums; }
-
-  /* ---------- cards ---------- */
+  /* ---------- cards: lưới nhiều cột, cuộn bên trong khung ---------- */
   #list{
-    display: flex;
-    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
     gap: 10px;
+    align-content: start;
+    padding: 2px 4px 10px 2px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rose-soft) transparent;
   }
+  #list::-webkit-scrollbar{ width: 8px; }
+  #list::-webkit-scrollbar-thumb{ background: var(--rose-soft); border-radius: 99px; }
+  #list::-webkit-scrollbar-track{ background: transparent; }
   .card{
     display: flex;
-    gap: 12px;
+    gap: 10px;
     background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: 18px;
-    padding: 12px 14px 12px 12px;
+    border-radius: 16px;
+    padding: 10px 12px 10px 10px;
     text-decoration: none;
     color: var(--ink);
     transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, background-color .25s ease, color .25s ease;
@@ -218,29 +242,29 @@
 
   .thumb{
     flex-shrink: 0;
-    width: 56px; height: 56px;
-    border-radius: 14px;
+    width: 46px; height: 46px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     overflow: hidden;
   }
-  .thumb svg{ width: 24px; height: 24px; position: relative; z-index: 1; }
+  .thumb svg{ width: 20px; height: 20px; position: relative; z-index: 1; }
   .thumb .mono{
     position: absolute;
     inset: 0;
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
-    padding: 4px 5px;
+    padding: 3px 4px;
     font-family: "Fraunces", serif;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 11px;
     color: rgba(255,255,255,0.55);
   }
 
-  .card-body{ min-width: 0; flex: 1; }
+  .card-body{ min-width: 0; flex: 1; display: flex; flex-direction: column; }
 
   .card-top{
     display: flex;
@@ -250,14 +274,17 @@
     margin-bottom: 6px;
   }
   .tag{
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     letter-spacing: 0.02em;
     color: var(--rose-strong);
     background: var(--rose-soft);
     border-radius: 999px;
-    padding: 4px 10px;
+    padding: 3px 8px;
     text-wrap: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .tag.men{ color: var(--gold); background: var(--gold-soft); }
   .tag.gift{ color: var(--rose-strong); background: var(--gold-soft); }
@@ -265,7 +292,7 @@
   .tag.acc{ color: var(--teal); background: var(--teal-soft); }
 
   .price{
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--ink-muted);
     font-variant-numeric: tabular-nums;
@@ -276,24 +303,29 @@
   .brand-name{
     font-family: "Fraunces", serif;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 15.5px;
     line-height: 1.3;
-    margin: 0 0 4px;
+    margin: 0 0 3px;
   }
   .note{
-    font-size: 13px;
-    line-height: 1.5;
+    font-size: 12.5px;
+    line-height: 1.45;
     color: var(--ink-muted);
-    margin: 0 0 10px;
+    margin: 0 0 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .go{
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 13px;
+    gap: 5px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--rose);
+    margin-top: auto;
   }
   .go svg{ width: 14px; height: 14px; transition: transform .12s ease; }
   .card:hover .go svg{ transform: translateX(2px); }
@@ -302,7 +334,7 @@
     text-align: center;
     color: var(--ink-muted);
     font-size: 13.5px;
-    padding: 40px 20px;
+    padding: 30px 20px;
   }
 
   /* ---------- họa tiết nền: thỏ, nơ, tim ---------- */
@@ -328,9 +360,9 @@
   }
 
   /* nơ hai bên tiêu đề */
-  h1{ display: flex; align-items: center; justify-content: center; gap: 9px; }
+  h1{ display: flex; align-items: center; gap: 8px; }
   .deco-bow{ flex-shrink: 0; display: inline-flex; color: var(--rose); opacity: .55; }
-  .deco-bow svg{ width: 21px; height: 15px; }
+  .deco-bow svg{ width: 17px; height: 12px; }
   .deco-bow.flip svg{ transform: scaleX(-1); }
 
   /* nút đổi giao diện sáng / tối */
@@ -361,9 +393,44 @@
   footer{
     text-align: center;
     color: var(--ink-muted);
-    font-size: 12px;
-    line-height: 1.6;
-    margin-top: 30px;
+    font-size: 11.5px;
+    line-height: 1.5;
+    margin: 8px 0 0;
+    flex-shrink: 0;
+  }
+  footer strong{ color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  /* ---------- mobile: lưới 2 cột, mọi thứ thu nhỏ ---------- */
+  @media (max-width: 640px){
+    body{ padding: 10px 12px 6px; }
+    .head{ gap: 10px; margin-bottom: 6px; }
+    .brand-mark{ width: 34px; height: 34px; border-radius: 11px; }
+    .brand-mark svg{ width: 18px; height: 18px; }
+    h1{ font-size: 18px; }
+    .handle{ font-size: 10.5px; }
+    .sub{
+      font-size: 12px;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .controls{ flex-direction: column; gap: 8px; margin-bottom: 8px; }
+    .search-wrap{ flex: 1 1 auto; width: 100%; }
+    .tabs{ width: 100%; }
+    .tab{ padding: 8px 11px; }
+    #list{ grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 8px; padding-right: 2px; }
+    .card{ padding: 9px 10px; border-radius: 14px; gap: 8px; }
+    .card:active{ transform: scale(0.97); }
+    .thumb{ width: 38px; height: 38px; border-radius: 10px; }
+    .thumb svg{ width: 17px; height: 17px; }
+    .thumb .mono{ font-size: 10px; padding: 2px 3px; }
+    .tag{ font-size: 9.5px; padding: 2px 7px; }
+    .price{ font-size: 10.5px; white-space: normal; text-align: right; max-width: 42%; }
+    .brand-name{ font-size: 13.5px; }
+    .note{ font-size: 11.5px; }
+    .go{ font-size: 11px; }
+    footer{ font-size: 11px; margin-top: 6px; }
   }
 </style>
 
@@ -374,16 +441,19 @@
 
 <div class="page">
 
-  <div class="brand-mark" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 21s-5-4.2-5-9a5 5 0 0 1 10 0c0 4.8-5 9-5 9Z"/>
-      <path d="M12 12V3"/>
-      <path d="M9 6c0-1.5 1.5-3 3-3s3 1.5 3 3"/>
-    </svg>
-  </div>
-
-  <p class="handle">@tulip27110</p>
-  <h1><span class="deco-bow" aria-hidden="true"><svg viewBox="0 0 36 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13C12 4 2 4 2 10c0 6 10 7 16 3Z"/><path d="M18 13c6-9 16-9 16-3 0 6-10 7-16 3Z"/><circle cx="18" cy="13" r="3"/><path d="M16 16l-3 8m8-8 3 8"/></svg></span>Tủ đồ xinh của Tulip<span class="deco-bow flip" aria-hidden="true"><svg viewBox="0 0 36 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13C12 4 2 4 2 10c0 6 10 7 16 3Z"/><path d="M18 13c6-9 16-9 16-3 0 6-10 7-16 3Z"/><circle cx="18" cy="13" r="3"/><path d="M16 16l-3 8m8-8 3 8"/></svg></span></h1>
+  <header class="head">
+    <div class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 21s-5-4.2-5-9a5 5 0 0 1 10 0c0 4.8-5 9-5 9Z"/>
+        <path d="M12 12V3"/>
+        <path d="M9 6c0-1.5 1.5-3 3-3s3 1.5 3 3"/>
+      </svg>
+    </div>
+    <div class="head-text">
+      <p class="handle">@tulip27110</p>
+      <h1><span class="deco-bow" aria-hidden="true"><svg viewBox="0 0 36 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13C12 4 2 4 2 10c0 6 10 7 16 3Z"/><path d="M18 13c6-9 16-9 16-3 0 6-10 7-16 3Z"/><circle cx="18" cy="13" r="3"/><path d="M16 16l-3 8m8-8 3 8"/></svg></span>Tủ đồ xinh của Tulip<span class="deco-bow flip" aria-hidden="true"><svg viewBox="0 0 36 26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13C12 4 2 4 2 10c0 6 10 7 16 3Z"/><path d="M18 13c6-9 16-9 16-3 0 6-10 7-16 3Z"/><circle cx="18" cy="13" r="3"/><path d="M16 16l-3 8m8-8 3 8"/></svg></span></h1>
+    </div>
+  </header>
   <p class="sub">Tổng hợp shop đã mặc &amp; review trên kênh — bấm vào thẻ để mở thẳng shop trên Shopee.</p>
 
   <div class="controls">
@@ -394,12 +464,10 @@
     <div class="tabs" id="tabs" role="tablist"></div>
   </div>
 
-  <p class="count-line"><strong id="count">0</strong> lựa chọn phù hợp</p>
-
   <div id="list"></div>
   <p class="empty" id="empty" hidden>Không tìm thấy gì khớp. Thử từ khoá khác nhé.</p>
 
-  <footer>Danh sách cập nhật tự động từ Google Sheet · <span id="sync-status">đang tải bản mới nhất…</span><br>Kênh TikTok @tulip27110 · Lưu trang này để quay lại bất cứ lúc nào</footer>
+  <footer><strong id="count">0</strong> lựa chọn · <span id="sync-status">đang tải bản mới nhất…</span> · TikTok @tulip27110</footer>
 </div>
 
 <!-- Dữ liệu sẵn (bản chụp từ Google Sheet, GitHub Actions tự làm mới mỗi vài giờ).
