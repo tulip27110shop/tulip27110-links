@@ -25,6 +25,8 @@
     --gold-soft: #F6E8D1;
     --plum: #7A5CC9;
     --plum-soft: #EDE7F8;
+    --teal: #2E9A8C;
+    --teal-soft: #E2F1EE;
     --line: #F0E2DB;
     --shadow: rgba(60, 30, 25, 0.08);
   }
@@ -43,6 +45,8 @@
       --gold-soft: #3C2F1C;
       --plum: #C9B4F0;
       --plum-soft: #2E2440;
+      --teal: #7FD0C3;
+      --teal-soft: #1E302C;
       --line: #3A2A2D;
       --shadow: rgba(0, 0, 0, 0.35);
     }
@@ -61,6 +65,8 @@
     --gold-soft: #3C2F1C;
     --plum: #C9B4F0;
     --plum-soft: #2E2440;
+    --teal: #7FD0C3;
+    --teal-soft: #1E302C;
     --line: #3A2A2D;
     --shadow: rgba(0, 0, 0, 0.35);
   }
@@ -256,6 +262,7 @@
   .tag.men{ color: var(--gold); background: var(--gold-soft); }
   .tag.gift{ color: var(--rose-strong); background: var(--gold-soft); }
   .tag.beauty{ color: var(--plum); background: var(--plum-soft); }
+  .tag.acc{ color: var(--teal); background: var(--teal-soft); }
 
   .price{
     font-size: 12px;
@@ -395,781 +402,23 @@
   <footer>Danh sách cập nhật tự động từ Google Sheet · <span id="sync-status">đang tải bản mới nhất…</span><br>Kênh TikTok @tulip27110 · Lưu trang này để quay lại bất cứ lúc nào</footer>
 </div>
 
+<!-- Dữ liệu sẵn (bản chụp từ Google Sheet, GitHub Actions tự làm mới mỗi vài giờ).
+     Trang vẫn tải trực tiếp Google Sheet mỗi lần mở — bản này chỉ dùng khi mạng tới Google lỗi. -->
+<script src="data.js"></script>
+
 <script>
   // ============ DỮ LIỆU ============
-  // Trang tải trực tiếp dữ liệu từ Google Sheet mỗi lần mở (real-time).
-  // FALLBACK_SHOPS là bản chụp ngày 11/10/2026 — chỉ dùng khi không tải được sheet.
-  const FALLBACK_SHOPS = [
-    {
-        "style": "Clean girl / Thanh lịch",
-        "brand": "Mia Ritta",
-        "cat": "Đồ nữ",
-        "note": "Đồ basic lịch sự, tôn dáng, có gu, chất vải đứng form tốt; hợp đi làm, đi chơi, giá hơi mắc xíu",
-        "price": "550-1tr",
-        "link": "https://s.shopee.vn/904yvntZoz"
-    },
-    {
-        "style": "Đáng yêu / Bánh bèo",
-        "brand": "Hèo",
-        "cat": "Đồ nữ",
-        "note": "Nhiều set đồ bánh bèo, đầm babydoll ngọt ngào; phù hợp học sinh - sinh viên.",
-        "price": "80k - 200k",
-        "link": "https://s.shopee.vn/1gIOCUQFoP"
-    },
-    {
-        "style": "Fairycore / Điệu đà",
-        "brand": "Sugar crush",
-        "cat": "Đồ nữ",
-        "note": "Chuyên đầm voan bèo, áo ren thắt nơ kiểu cách; bắt trend Quảng Châu nhanh.",
-        "price": "100k - 250k",
-        "link": "https://s.shopee.vn/7AdKkerKH3"
-    },
-    {
-        "style": "Vintage / Retro / Mori",
-        "brand": "Nhiên vintage",
-        "cat": "Đồ nữ",
-        "note": "Chuyên đồ linen, cotton mát mẻ, đầm suông dài tone trầm mộc mạc; vibe thơ mộng.",
-        "price": "180k - 350k",
-        "link": "https://s.shopee.vn/60RNMbjif5"
-    },
-    {
-        "style": "Nàng thơ / Nữ tính",
-        "brand": "SweeticMe",
-        "cat": "Đồ nữ",
-        "note": "Shopee Mall; đầm voan nhã nhặn, áo blouse, cardigan pastel thanh lịch, nhẹ nhàng.",
-        "price": "150k - 350k",
-        "link": "https://s.shopee.vn/7VGB9RTKLu"
-    },
-    {
-        "style": "Streetwear / Sporty chic",
-        "brand": "Augety.st",
-        "cat": "Đồ nữ",
-        "note": "Shopee Mall; nổi bật với baby tee, hoodie zip năng động, quần cargo bụi bặm; Gen Z ưa chuộng.",
-        "price": "150k - 350k",
-        "link": "https://s.shopee.vn/4VcZa3UZbI"
-    },
-    {
-        "style": "Sexy chic / Sang chảnh",
-        "brand": "iam.vietanhsng",
-        "cat": "Đồ nữ",
-        "note": "Thiết kế cắt xẻ tôn dáng, tone màu trung tính tối giản; hợp đi cafe sống ảo, tiệc nhẹ.",
-        "price": "200k - 500k",
-        "link": "https://s.shopee.vn/1LfXoLl9nN"
-    },
-    {
-        "style": "Ulzzang / Casual dạo phố",
-        "brand": "Tiktik_vn",
-        "cat": "Đồ nữ",
-        "note": "Mẫu mã đa dạng phong phú, giá mềm dẻo; chủ yếu là áo thun dạo phố và đồ basic hằng ngày.",
-        "price": "70k - 180k",
-        "link": "https://s.shopee.vn/40gIzYXBBt"
-    },
-    {
-        "style": "Soft Minimalist / Lịch sự",
-        "brand": "_min.st",
-        "cat": "Đồ nữ",
-        "note": "Phù hợp với ai mê blazer, quần tây, áo sơ mi thiết kế nhã nhặn, cơ bản để đi làm/đi học.",
-        "price": "150k - 300k",
-        "link": "https://s.shopee.vn/2BEeo9Azfe"
-    },
-    {
-        "style": "Streetwear / Grunge / Unisex",
-        "brand": "Novarift",
-        "cat": "Đồ nữ",
-        "note": "Chuyên đồ thun form rộng, cá tính mạnh, có các thiết kế chân váy và quần denim cool ngầu.",
-        "price": "180k - 400k",
-        "link": "https://s.shopee.vn/7KwkxhkgsQ"
-    },
-    {
-        "style": "Y2K / Nổi loạn / Sexy",
-        "brand": "THE QUẠO",
-        "cat": "Đồ nữ",
-        "note": "Shopee Mall; cực hot với baby tee in slogan độc lạ, đầm ôm body tinh nghịch, phá cách.",
-        "price": "150k - 350k",
-        "link": "https://s.shopee.vn/4fvzmz88RE"
-    },
-    {
-        "style": "Streetwear / Unisex",
-        "brand": "VIBESTU",
-        "cat": "Đồ nữ",
-        "note": "Local brand chuyên áo thun boxy, baby tee, hoodie nỉ form rộng cá tính.",
-        "price": "150k - 280k",
-        "link": "https://s.shopee.vn/112rG3ZVMU"
-    },
-    {
-        "style": "Casual / Streetwear",
-        "brand": "ThePalm",
-        "cat": "Đồ nữ",
-        "note": "Chuyên áo thun, áo raglan form boxy năng động, hoạ tiết chữ đơn giản, dễ phối đồ.",
-        "price": "250k - 350k",
-        "link": "https://s.shopee.vn/1BMHSMYs1X"
-    },
-    {
-        "style": "Nàng thơ / Bánh bèo",
-        "brand": "Angel-Land",
-        "cat": "Đồ nữ",
-        "note": "Nhiều mẫu đầm váy thiết kế nữ tính, nhẹ nhàng, phù hợp đi chơi, hẹn hò.",
-        "price": "150k - 300k",
-        "link": "https://s.shopee.vn/1LfhefYEga"
-    },
-    {
-        "style": "Ulzzang / Năng động",
-        "brand": "Eddiestu",
-        "cat": "Đồ nữ",
-        "note": "Thời trang basic Hàn Quốc, năng động dễ mặc hằng ngày, hợp gu giới trẻ.",
-        "price": "100k - 250k",
-        "link": "https://s.shopee.vn/1Vz7qyXbLd"
-    },
-    {
-        "style": "Nổi loạn / Cá tính",
-        "brand": "Kaching Worldwide",
-        "cat": "Đồ nữ",
-        "note": "Áo thun 100% cotton in slogan chữ độc lạ, vui nhộn, form boxy cực chất.",
-        "price": "200k - 300k",
-        "link": "https://s.shopee.vn/1gIY3HWy0g"
-    },
-    {
-        "style": "Y2K / Sexy chic",
-        "brand": "Lollie",
-        "cat": "Đồ nữ",
-        "note": "Đồ nữ thiết kế ôm dáng, cắt xẻ nhẹ nhàng, tôn đường cong quyến rũ.",
-        "price": "150k - 350k",
-        "link": "https://s.shopee.vn/8pliax9WTJ"
-    },
-    {
-        "style": "Soft Minimalist / Basic",
-        "brand": "Aufra",
-        "cat": "Đồ nữ",
-        "note": "Thời trang ứng dụng cao, màu sắc trung tính thanh lịch dễ phối đồ công sở.",
-        "price": "180k - 400k",
-        "link": "https://s.shopee.vn/9058nG8t8M"
-    },
-    {
-        "style": "Clean girl / Dạo phố",
-        "brand": "Tosun",
-        "cat": "Đồ nữ",
-        "note": "Quần áo nữ form thoải mái, chất liệu mát mẻ phù hợp mặc đi làm, đi dạo.",
-        "price": "150k - 300k",
-        "link": "https://s.shopee.vn/9AOYzZ8FnP"
-    },
-    {
-        "style": "Đáng yêu / Bánh bèo",
-        "brand": "Dob",
-        "cat": "Đồ nữ",
-        "note": "Các set đồ trẻ trung, năng động, nhiều mẫu áo kiểu xinh xắn cho học sinh sinh viên.",
-        "price": "100k - 250k",
-        "link": "https://s.shopee.vn/80CbbQChAC"
-    },
-    {
-        "style": "Minimalism / Lịch lãm",
-        "brand": "Pealo",
-        "cat": "Đồ nam",
-        "note": "Quần âu, áo thun gân body, sơ mi nam chất liệu cao cấp phom dáng Hàn Quốc.",
-        "price": "200k - 500k",
-        "link": "https://s.shopee.vn/9AOYzuUE2x"
-    },
-    {
-        "style": "Smart Casual / Tối giản",
-        "brand": "B Brown Studio",
-        "cat": "Đồ nam",
-        "note": "Áo thun, sơ mi nam basic, thiết kế màu sắc trầm ấm thanh lịch và tinh tế.",
-        "price": "200k - 400k",
-        "link": "https://s.shopee.vn/1LfhfVy2wS"
-    },
-    {
-        "style": "Nam tính / Bụi bặm",
-        "brand": "De Basé",
-        "cat": "Đồ nam",
-        "note": "Các item denim, quần jean, áo khoác nam tính mang đậm phong cách đường phố.",
-        "price": "250k - 500k",
-        "link": "https://s.shopee.vn/1Vz7roxPbV"
-    },
-    {
-        "style": "Streetwear / Form rộng",
-        "brand": "whose.studio",
-        "cat": "Đồ nam",
-        "note": "Đồ nam unisex form rộng rãi thoải mái, phong cách trẻ trung cá tính.",
-        "price": "150k - 350k",
-        "link": "https://s.shopee.vn/1gIY47wmGY"
-    },
-    {
-        "style": "Local Brand / Nổi bật",
-        "brand": "GODMOTHER",
-        "cat": "Đồ nam",
-        "note": "Áo thun in artwork, thiết kế form hộp mạnh mẽ và cá tính cho nam giới.",
-        "price": "200k - 400k",
-        "link": "https://s.shopee.vn/1qbyGQw8vb"
-    },
-    {
-        "style": "Điệu đà / Nữ tính",
-        "brand": "Moodie Girls",
-        "cat": "Đồ nữ",
-        "note": "Đầm váy, áo kiểu thiết kế bắt mắt, hợp đi tiệc nhẹ sinh nhật hoặc cafe sống ảo.",
-        "price": "180k - 350k",
-        "link": "https://s.shopee.vn/8plibZPJZn"
-    },
-    {
-        "style": "Sang chảnh / Sexy",
-        "brand": "Rosier De Lux",
-        "cat": "Đồ nữ",
-        "note": "Trang phục thiết kế cao cấp, chất liệu xịn, tôn dáng phù hợp đi event, tiệc tùng.",
-        "price": "300k - 600k",
-        "link": "https://s.shopee.vn/1qbyGhpxmS"
-    },
-    {
-        "style": "Đáng yêu / Bánh bèo",
-        "brand": "DaaLaa Store",
-        "cat": "Đồ nữ",
-        "note": "Nhiều mẫu đồ xinh xắn, áo thun nữ họa tiết chấm bi, bồng bềnh nữ tính.",
-        "price": "Dưới 100k",
-        "link": "https://s.shopee.vn/AUtwgHdgqh"
-    },
-    {
-        "style": "Ulzzang / Năng động",
-        "brand": "Tharo Clothing",
-        "cat": "Đồ nữ",
-        "note": "Áo thun tay ngắn kiểu bồng, áo thun tay lửng form rộng trẻ trung.",
-        "price": "Dưới 100k",
-        "link": "https://s.shopee.vn/9KhzI8i8DU"
-    },
-    {
-        "style": "Soft Minimalist / Lịch sự",
-        "brand": "BYJANE.HN",
-        "cat": "Đồ nữ",
-        "note": "Đồ nữ basic, thiết kế nhã nhặn, cơ bản dễ phối đồ.",
-        "price": "Dưới 100k",
-        "link": "https://s.shopee.vn/9V1PURhUsX"
-    },
-    {
-        "style": "Casual / Dạo phố",
-        "brand": "Store Chinh Trần",
-        "cat": "Đồ nữ",
-        "note": "Áo thun kiểu dáng đa dạng, nhiều lựa chọn mặc hằng ngày.",
-        "price": "Dưới 100k",
-        "link": "https://s.shopee.vn/9fKpgkgrXa"
-    },
-    {
-        "style": "Y2K / Nổi loạn",
-        "brand": "Kimcuongsokiuu",
-        "cat": "Đồ nữ",
-        "note": "Áo thun phong cách cá tính, thiết kế độc đáo.",
-        "price": "Dưới 100k",
-        "link": "https://s.shopee.vn/qjRAaHPaz"
-    },
-    {
-        "style": "Fairycore / Điệu đà",
-        "brand": "Secodee",
-        "cat": "Đồ nữ",
-        "note": "Chuyên áo ren, đầm bèo nhún điệu đà, phối đồ cực có gu.",
-        "price": "Từ 200k+",
-        "link": "https://s.shopee.vn/9zxg5V7VIP"
-    },
-    {
-        "style": "Nữ tính / Sống ảo",
-        "brand": "Reigirl.vn",
-        "cat": "Đồ nữ",
-        "note": "Chuyên các mẫu áo trễ vai có gu, tôn dáng quyến rũ.",
-        "price": "Dưới 150k",
-        "link": "https://s.shopee.vn/8V8sKJASye"
-    },
-    {
-        "style": "Thanh lịch / Tối giản",
-        "brand": "EMLY.VN",
-        "cat": "Đồ nữ",
-        "note": "Quần áo nữ form thoải mái, màu sắc nhã nhặn dễ mặc đi làm/đi học.",
-        "price": "Dưới 150k",
-        "link": "https://s.shopee.vn/1gIZntiFju"
-    },
-    {
-        "style": "",
-        "brand": "DEROSE SAIGON",
-        "cat": "Đồ nữ",
-        "note": "Form quần xinh, giá rẻ",
-        "price": "",
-        "link": "https://s.shopee.vn/2qUYsramxF"
-    },
-    {
-        "style": "",
-        "brand": "Bra tokyolife",
-        "cat": "Đồ nữ",
-        "note": "Bra bền, không lộ viền, giá mềm",
-        "price": "150-450k",
-        "link": "https://s.shopee.vn/1ARspSGtc"
-    },
-    {
-        "style": "",
-        "brand": "Corèle V Official Store",
-        "cat": "Đồ nữ",
-        "note": "Gọng mềm, cúp ôm, quăng máy giặt kh giữ gìn gì 1 năm rưỡi vẫn giữ form",
-        "price": "",
-        "link": "https://s.shopee.vn/4B00qj5SMS"
-    },
-    {
-        "style": "Bánh bèo / Tiểu thư",
-        "brand": "jenny.berry.studio",
-        "cat": "Đồ nữ",
-        "note": "Chuyên áo thun body, áo tay bồng, đầm babydoll",
-        "price": "Dưới 100K",
-        "link": "https://s.shopee.vn/70Kod3yDSQ"
-    },
-    {
-        "style": "Body / Tôn dáng",
-        "brand": "bychabon",
-        "cat": "Đồ nữ",
-        "note": "Chuyên áo thun nữ, áo kiểu ôm body",
-        "price": "Dưới 100K",
-        "link": "https://s.shopee.vn/1B4I3xuvc"
-    },
-    {
-        "style": "Năng động / Tôn dáng",
-        "brand": "kimcuongsokiuu",
-        "cat": "Đồ nữ",
-        "note": "Set đồ thun co giãn, áo thắt eo",
-        "price": "Dưới 100K",
-        "link": "https://s.shopee.vn/BUUUMxHaf"
-    },
-    {
-        "style": "Quyến rũ / Body",
-        "brand": "mimila.official",
-        "cat": "Đồ nữ",
-        "note": "Chuyên jumpsuit, áo ôm sát body chất thun",
-        "price": "Dưới 100K",
-        "link": "https://s.shopee.vn/7AeEpMxa7T"
-    },
-    {
-        "style": "Thanh lịch / Nữ tính",
-        "brand": "tharoclothing",
-        "cat": "Đồ nữ",
-        "note": "Áo quây, áo ống, áo vest cách điệu",
-        "price": "Dưới 100K",
-        "link": "https://s.shopee.vn/LnugfweFi"
-    },
-    {
-        "style": "Basic / Tối giản",
-        "brand": "justdun",
-        "cat": "Đồ nữ",
-        "note": "Áo thun giữ nhiệt, áo cotton trơn tay dài",
-        "price": "Dưới 100K",
-        "link": "https://s.shopee.vn/W7Ksyw0ul"
-    },
-    {
-        "style": "Y2K / Aesthetic",
-        "brand": "noco.label",
-        "cat": "Đồ nữ",
-        "note": "Corset và croptop phom dáng độc lạ",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/60SHRE21UG"
-    },
-    {
-        "style": "Thiết kế / Hiện đại",
-        "brand": "augetystudio",
-        "cat": "Đồ nữ",
-        "note": "Quần legging ống loe hack dáng",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/4fwtqdg9Sa"
-    },
-    {
-        "style": "Kẹo ngọt / Babydoll",
-        "brand": "29feb.closet",
-        "cat": "Đồ nữ",
-        "note": "Đầm xòe, váy babydoll hoa nhí",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/4qGK3IVjhQ"
-    },
-    {
-        "style": "Tân Trung Hoa / Clean Girl",
-        "brand": "joella_vn",
-        "cat": "Đồ nữ",
-        "note": "Set đồ dạ tweed, đầm tay bồng sang chảnh",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/6AlhdX1O9J"
-    },
-    {
-        "style": "Năng động / Thể thao",
-        "brand": "moodie.girls",
-        "cat": "Đồ nữ",
-        "note": "Áo babytee họa tiết, áo thun raglan, quần short",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/gQl5hAmiU"
-    },
-    {
-        "style": "Vintage / 2hand",
-        "brand": "mousi.2hand",
-        "cat": "Đồ nữ",
-        "note": "Áo thun Old School / Vintage",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/6L57pq0koM"
-    },
-    {
-        "style": "Denim / Năng động",
-        "brand": "twenti.vn",
-        "cat": "Đồ nữ",
-        "note": "Đồ denim (quần jeans, chân váy jeans) và áo babytee",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/4fwtqzWN2P"
-    },
-    {
-        "style": "Unisex / Năng động",
-        "brand": "calem.club",
-        "cat": "Đồ nữ",
-        "note": "Quần áo unisex, áo khoác nỉ hoodie zip",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/5AtARuUT1W"
-    },
-    {
-        "style": "Sang trọng / Đi tiệc",
-        "brand": "monasaigon",
-        "cat": "Đồ nữ",
-        "note": "Váy lụa đi tiệc, đầm trễ vai tôn dáng",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/4qGK2wfW7d"
-    },
-    {
-        "style": "Nàng thơ / Dệt kim",
-        "brand": "seeyoustudio.vn",
-        "cat": "Đồ nữ",
-        "note": "Áo len mỏng mùa hè, đồ dệt kim",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/50ZkFbV6MV"
-    },
-    {
-        "style": "Basic",
-        "brand": "EnEnxinh",
-        "cat": "Đồ nữ",
-        "note": "Chuyên áo thun, quần ống rộng và các item basic mặc hàng ngày cực dễ phối.",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/AUugpebJHX"
-    },
-    {
-        "style": "Đồ ngủ cute",
-        "brand": "Chuyên đồ ngủ Kawaii Sleepwear",
-        "cat": "Đồ nữ",
-        "note": "Các set đồ bộ mặc nhà, pijama lụa/thun họa tiết dễ thương, thoải mái.",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/9KijRVfkeK"
-    },
-    {
-        "style": "Điệu đà/ năng động",
-        "brand": "XIXI FASHION VN",
-        "cat": "Đồ nữ",
-        "note": "Áo kiểu phối nơ, chân váy ngắn, set đồ mix sẵn trẻ trung bắt trend tốt.",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/9V29dof7JN"
-    },
-    {
-        "style": "Thanh lịch / Nữ tính",
-        "brand": "VanAnh Boutique",
-        "cat": "Đồ nữ",
-        "note": "Chuyên các mẫu đầm thiết kế, set váy áo thanh lịch phù hợp đi làm hoặc đi dạo phố.",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/9fLZq7eTyQ"
-    },
-    {
-        "style": "Hiện đại / Trẻ trung",
-        "brand": "Miastore1.vn",
-        "cat": "Đồ nữ",
-        "note": "Váy đầm dạo phố, áo sơ mi kiểu cách và các item mặc daily hiện đại, nữ tính.",
-        "price": "100K+",
-        "link": "https://s.shopee.vn/9pf02QdqdT"
-    },
-    {
-        "style": "Modern Room",
-        "brand": "Dễ thương / Cute",
-        "cat": "Đồ nữ",
-        "note": "Đồ siêu dễ thương, nằm trong list shop đi học giá hạt dẻ không đại trà.",
-        "price": "100k - 250k",
-        "link": "https://s.shopee.vn/1BN4yDvahB"
-    },
-    {
-        "style": "Eighteen Again",
-        "brand": "Đi học",
-        "cat": "Đồ nữ",
-        "note": "Nằm trong top list shop đồ đi học giá hạt dẻ, không đại trà, không quá hở được recommend.",
-        "price": "150k - 300k",
-        "link": "https://s.shopee.vn/gQoNIxUi6"
-    },
-    {
-        "style": "Dora The Label",
-        "brand": "Đi học",
-        "cat": "Đồ nữ",
-        "note": "Nằm trong top list shop đồ đi học giá hạt dẻ, không đại trà, không quá hở được recommend.",
-        "price": "150k - 300k",
-        "link": "https://s.shopee.vn/qkEZbwrN9"
-    },
-    {
-        "style": "Areum",
-        "brand": "Đi học",
-        "cat": "Đồ nữ",
-        "note": "Nằm trong top list shop đồ đi học giá hạt dẻ, không đại trà, không quá hở được recommend.",
-        "price": "150k - 300k",
-        "link": "https://s.shopee.vn/4LK6k2jXGq"
-    },
-    {
-        "style": "Dawn",
-        "brand": "Nhẹ nhàng",
-        "cat": "Đồ nữ",
-        "note": "Style nhẹ nhàng, thuộc list shop đồ đi học giá hạt dẻ không đại trà được recommend.",
-        "price": "150k - 300k",
-        "link": "https://s.shopee.vn/4VdWwLitvt"
-    },
-    {
-        "style": "Midmx Store",
-        "brand": "Áo thun/ basic",
-        "cat": "Đồ nam, Đồ nữ",
-        "note": "Vibe học sinh Hàn Quốc đi học nhưng chưa quá Tây, người bình luận mới phát hiện ra shop này.",
-        "price": "200k - 400k",
-        "link": "https://s.shopee.vn/40hGLQknwo"
-    },
-    {
-        "style": "DW (Daniel Wellington)",
-        "brand": "Đồng hồ / Minimalist",
-        "cat": "Phụ kiện",
-        "note": "Chuyên đồng hồ chính hãng thiết kế tối giản, dây da/thép mỏng nhẹ; hợp tặng dịp đặc biệt vì vừa sang vừa không quá phô trương.",
-        "price": "1.5tr - 3tr",
-        "link": "https://s.shopee.vn/4B0gXjkAbr"
-    },
-    {
-        "style": "Son",
-        "brand": "Son Merzy",
-        "cat": "Mỹ phẩm",
-        "note": "Bảng màu trẻ trung, dễ dùng và không kén nền da. Độ bám màu siêu đỉnh, uống nước không bị trôi.",
-        "price": "Bình dân (150k - 200k)",
-        "link": "https://s.shopee.vn/5q93q0Fele"
-    },
-    {
-        "style": "Son",
-        "brand": "Son Dior",
-        "cat": "Mỹ phẩm",
-        "note": "Dưỡng môi cực tốt, không làm khô hay thâm môi. Đẳng cấp khác biệt và hoàn toàn xứng đáng đầu tư.",
-        "price": "High-end (Cao cấp)",
-        "link": "https://s.shopee.vn/5fpddhGI6d"
-    },
-    {
-        "style": "Kem nền",
-        "brand": "Kem nền Dior",
-        "cat": "Mỹ phẩm",
-        "note": "Lớp nền siêu tệp da, bám cực chắc xuyên suốt 24h dù hoạt động mạnh. Không lem, không trôi và không gây mụn ẩn.",
-        "price": "High-end (Cao cấp)",
-        "link": "https://s.shopee.vn/60SU2JF1Qj"
-    },
-    {
-        "style": "Son",
-        "brand": "Son YSL",
-        "cat": "Mỹ phẩm",
-        "note": "Khắc phục cực tốt tình trạng môi siêu khô. Tuy nhiên dòng lì hay bị trôi nham nhở và dễ bị dính son vào răng.",
-        "price": "1.000k - 1.350k",
-        "link": "https://s.shopee.vn/6AluEcEO5k"
-    },
-    {
-        "style": "Son",
-        "brand": "Son MAC",
-        "cat": "Mỹ phẩm",
-        "note": "Hiệu ứng lên màu cực kỳ đẹp mắt, được đánh giá cao hơn hẳn YSL về mặt thẩm mỹ.",
-        "price": "High-end (Cao cấp)",
-        "link": "https://s.shopee.vn/6VOkdED7Pq"
-    },
-    {
-        "style": "Son",
-        "brand": "Son Romand",
-        "cat": "Mỹ phẩm",
-        "note": "Màu lên đẹp và bám màu siêu tốt, rẻ nhưng chất lượng. Cần lưu ý có thể gây sưng rát môi với người có cơ địa nhạy cảm khi ăn cay.",
-        "price": "Bình dân (100k - 200k)",
-        "link": "https://s.shopee.vn/113o5Fcf5n"
-    },
-    {
-        "style": "Son",
-        "brand": "Son Bbia",
-        "cat": "Mỹ phẩm",
-        "note": "Chất lượng ở mức bình dân. Trải nghiệm trên môi không được đánh giá cao và khó sánh được với hàng highend.",
-        "price": "Bình dân (100k - 200k)",
-        "link": "https://s.shopee.vn/30osSsw2Un"
-    },
-    {
-        "style": "Son",
-        "brand": "Son Lancome, Chanel, Hermes",
-        "cat": "Mỹ phẩm",
-        "note": "Bám màu siêu kém, chỉ cần uống nước là có thể trôi ngay. Màu son bị nhận xét là hơi già và kén nền môi gốc.",
-        "price": "High-end (Cao cấp)",
-        "link": "https://s.shopee.vn/2qVSGZwfpm"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Đồng hồ Casio",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/8pmChrixYT"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Máy cạo râu nam",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/905cuAiKDW"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Hoa handmade",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/9AP36ThgsZ"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Thiệp handmade",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/9KiTImh3Xc"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Ví handmade",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/9V1tV5gQCf"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Áo handmade",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/4fwdkFavIj"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Gạt tàn",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/5AsuLAZ1Hq"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Dung dịch vệ sinh nam",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/50ZU8rZecp"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Hộp bật nhảy",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/5LCKXTYNwu"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Khung ảnh in hình",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/5VVkjmXkbx"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Móc khóa in hình",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/6fhi7wkVJS"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Áo đôi sweeter, nữ lệch vai nhún bèo, nam sweater",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/80DPU3bcl3"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Áo thun đôi Người Tình Hợp Lý",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/8V9g4yZikA"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Quần tây nam ống suông",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/8KqFsfaM59"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Combo quần sịp nam",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/AAHu42TNMW"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Áo thun đi tập gym",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/9zyTrjU0hV"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Set 10 đôi tất trắng",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/3g4QK7Vab2"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Ví nam cao cấp Artino sang xịn mịn",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/3qNqWQUxG5"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Áo sơ mi nam cuban mát",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/3LRZvVWrH0"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Bộ ba khăn tắm xịn",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/3Vl07oWDw3"
-    },
-    {
-        "style": "Quà tặng cho Nam",
-        "brand": "Lego cây thông giáng sinh",
-        "cat": "Quà tặng",
-        "note": "",
-        "price": "",
-        "link": "https://s.shopee.vn/BUY9hreWw"
-    }
-];
+  // data.js (tự sinh bởi sync.mjs) chứa: danh sách tab của Google Sheet + bản chụp dữ liệu.
+  // Mỗi lần mở trang vẫn fetch trực tiếp từng tab từ Google Sheet => thêm dòng / sửa link
+  // trong sheet là trang này tự mới theo, không cần đẩy lại GitHub. Tab mới thêm vào sheet
+  // do GitHub Actions đồng bộ về data.js trong vòng vài giờ.
+  const DATA = window.TULIP_DATA || { sheetId: "1W41kcOQO3v_1oZIZ_pe3urvyKqJb5Vx2sQNUh2jxGP4", tabs: [], shops: [] };
+  const SHEET_ID = DATA.sheetId;
 
-  const SHEET_ID = "1W41kcOQO3v_1oZIZ_pe3urvyKqJb5Vx2sQNUh2jxGP4";
-  const SHEET_TABS = {
-    main: "0",             // tab Tổng hợp shop
-    gift: "798213082",     // tab Quà tặng cho Nam
-    beauty: "1763419091"   // tab Mỹ phẩm đang tiền
-  };
-
-  let SHOPS = FALLBACK_SHOPS.slice();
+  let SHOPS = DATA.shops.map(s => ({
+    style: s.style || "", brand: s.brand || "Shop", cat: s.cat || "Đồ nữ",
+    note: s.note || "", price: s.price || "", link: s.link
+  }));
 
   // ============ TIỆN ÍCH ============
   function escapeHtml(str){
@@ -1179,6 +428,8 @@
   function cleanCell(v){
     return String(v == null ? "" : v).replace(/[\r\n]+/g, " ").replace(/\s+/g, " ").trim();
   }
+
+  const fold = (s) => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").toLowerCase().trim();
 
   // Parser CSV chuẩn RFC4180 — xử lý ô có dấu ngoặc kép, phẩy và xuống dòng bên trong
   function parseCSV(text){
@@ -1200,78 +451,60 @@
     return rows;
   }
 
-  function pickCol(header, names, fallbackIdx){
-    const h = header.map(x => cleanCell(x).toLowerCase());
-    for (const n of names){
-      const i = h.indexOf(n.toLowerCase());
+  // Tìm cột theo tên tiêu đề (so cả có dấu lẫn không dấu), trả về -1 nếu không có
+  function colBy(header, needles){
+    const h = header.map(fold);
+    for (const n of needles){
+      const i = h.indexOf(n);
       if (i !== -1) return i;
     }
-    return fallbackIdx;
+    for (const n of needles){
+      const i = h.findIndex(x => x.includes(n));
+      if (i !== -1) return i;
+    }
+    return -1;
+  }
+
+  // Nhóm danh mục cố định theo tên tab; tab "Tổng hợp" để danh mục theo cột Phân loại.
+  // Tab lạ sau này (vd "Đồ ăn") lấy chính tên tab làm danh mục -> nút lọc tự xuất hiện.
+  function tabCat(name){
+    const n = fold(name);
+    if (n.includes("tong hop")) return null;
+    if (n.includes("my pham")) return "Mỹ phẩm";
+    if (n.includes("phu kien")) return "Phụ kiện";
+    if (n.includes("qua tang") || n.includes("qua ny")) return "Quà tặng";
+    return name.trim();
   }
 
   // ============ ĐỌC SHEET ============
-  // Tab Tổng hợp: Phong cách | BRAND | Phân loại | Ghi chú | Phân khúc giá | Link
-  function parseMainTab(rows){
+  // Parser chung cho mọi tab: nhận diện cột theo tên tiêu đề (Link, BRAND/Sản phẩm,
+  // Phong cách, Phân loại, Ghi chú/Lý do, Phân khúc giá) bất kể thứ tự cột.
+  function parseTab(rows, tabName){
     if (!rows.length) return [];
     const H = rows[0];
-    const iS = pickCol(H, ["Phong cách"], 0), iB = pickCol(H, ["BRAND"], 1),
-          iC = pickCol(H, ["Phân loại"], 2), iN = pickCol(H, ["Ghi chú"], 3),
-          iP = pickCol(H, ["Phân khúc giá"], 4), iL = pickCol(H, ["Link"], 5);
+    const iLink = colBy(H, ["link"]);
+    if (iLink === -1) return [];
+    const iBrand = colBy(H, ["san pham nhac", "ten san pham", "san pham", "brand", "ten"]);
+    const iStyle = colBy(H, ["phong cach"]);
+    const iCat = colBy(H, ["phan loai"]);
+    const iNote = colBy(H, ["ghi chu", "ly do"]);
+    const iPrice = colBy(H, ["phan khuc gia", "gia"]);
+    const fixedCat = tabCat(tabName);
     const out = [];
     for (const r of rows.slice(1)){
-      const link = cleanCell(r[iL] || "");
+      const link = cleanCell(r[iLink] || "");
       if (!/^https?:\/\//i.test(link)) continue;
+      const rowCat = iCat !== -1 ? cleanCell(r[iCat] || "") : "";
+      // Ưu tiên cột Phong cách; tab có danh mục cố định (Mỹ phẩm...) thì dùng giá trị
+      // cột Phân loại làm tag (vd "Son", "Kem nền"); còn lại thì lấy tên tab.
+      const style = (iStyle !== -1 ? cleanCell(r[iStyle] || "")
+        : fixedCat && iCat !== -1 ? rowCat : "") || tabName;
       out.push({
-        style: cleanCell(r[iS] || ""),
-        brand: cleanCell(r[iB] || "") || "Shop",
-        cat: cleanCell(r[iC] || "") || "Đồ nữ",
-        note: cleanCell(r[iN] || ""),
-        price: cleanCell(r[iP] || ""),
-        link
-      });
-    }
-    return out;
-  }
-
-  // Tab Quà tặng: STT | Sản phẩm nhắc trong cmt | Link shopee
-  function parseGiftTab(rows){
-    if (!rows.length) return [];
-    const H = rows[0];
-    const iB = pickCol(H, ["Sản phẩm nhắc trong cmt", "Sản phẩm"], 1),
-          iL = pickCol(H, ["Link shopee", "Link"], 2);
-    const out = [];
-    for (const r of rows.slice(1)){
-      const link = cleanCell(r[iL] || "");
-      if (!/^https?:\/\//i.test(link)) continue;
-      out.push({
-        style: "Quà tặng cho Nam",
-        brand: cleanCell(r[iB] || "") || "Quà tặng",
-        cat: "Quà tặng",
-        note: "",
-        price: "",
-        link
-      });
-    }
-    return out;
-  }
-
-  // Tab Mỹ phẩm: Tên sản phẩm | BRAND | Phân loại | Ghi chú | Phân khúc giá | Link
-  function parseBeautyTab(rows){
-    if (!rows.length) return [];
-    const H = rows[0];
-    const iP = pickCol(H, ["Tên sản phẩm", "Sản phẩm"], 0), iB = pickCol(H, ["BRAND"], 1),
-          iC = pickCol(H, ["Phân loại"], 2), iN = pickCol(H, ["Ghi chú"], 3),
-          iPr = pickCol(H, ["Phân khúc giá"], 4), iL = pickCol(H, ["Link"], 5);
-    const out = [];
-    for (const r of rows.slice(1)){
-      const link = cleanCell(r[iL] || "");
-      if (!/^https?:\/\//i.test(link)) continue;
-      out.push({
-        style: cleanCell(r[iC] || "") || "Mỹ phẩm",
-        brand: cleanCell(r[iP] || "") || cleanCell(r[iB] || "") || "Mỹ phẩm",
-        cat: "Mỹ phẩm",
-        note: cleanCell(r[iN] || ""),
-        price: cleanCell(r[iPr] || ""),
+        style,
+        brand: (iBrand !== -1 ? cleanCell(r[iBrand] || "") : "") || "Shop",
+        cat: fixedCat || rowCat || "Đồ nữ",
+        note: iNote !== -1 ? cleanCell(r[iNote] || "") : "",
+        price: iPrice !== -1 ? cleanCell(r[iPrice] || "") : "",
         link
       });
     }
@@ -1284,7 +517,10 @@
     return fetch(url, { cache: "no-store" }).then(res => {
       if (!res.ok) throw new Error("HTTP " + res.status);
       return res.text();
-    }).then(parseCSV);
+    }).then(text => {
+      if (/setResponse\(/.test(text.slice(0, 200))) throw new Error("sheet error");
+      return parseCSV(text);
+    });
   }
 
   function mergeShops(lists){
@@ -1300,10 +536,11 @@
   async function loadSheet(){
     const status = document.getElementById("sync-status");
     try{
-      const [main, gift, beauty] = await Promise.all([
-        fetchTab(SHEET_TABS.main), fetchTab(SHEET_TABS.gift), fetchTab(SHEET_TABS.beauty)
-      ]);
-      const merged = mergeShops([parseMainTab(main), parseGiftTab(gift), parseBeautyTab(beauty)]);
+      const tabs = (DATA.tabs || []).filter(t => t.gid != null);
+      const lists = await Promise.all(
+        tabs.map(t => fetchTab(t.gid).then(rows => parseTab(rows, t.name)).catch(() => []))
+      );
+      const merged = mergeShops(lists);
       if (merged.length){
         SHOPS = merged;
         buildTabs();
@@ -1335,7 +572,7 @@
         if (c && !cats.includes(c)) cats.push(c);
       }
     }
-    const order = ["Đồ nữ", "Đồ nam", "Mỹ phẩm", "Phụ kiện", "Quà tặng"];
+    const order = ["Đồ nữ", "Đồ nam", "Mỹ phẩm", "Phụ kiện", "Đồ ăn", "Quà tặng"];
     cats.sort((a, b) => {
       const ia = order.indexOf(a), ib = order.indexOf(b);
       return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
@@ -1361,6 +598,7 @@
     men: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3 3 2 3-2 3 3-2 2v12a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1V8L6 6Z"/></svg>',
     gift: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="1"/><path d="M4 9h16M12 9v11M12 9c-1.6 0-4-1-4-3.2A2.3 2.3 0 0 1 10.3 3C12 3 12 6 12 9Zm0 0c1.6 0 4-1 4-3.2A2.3 2.3 0 0 0 13.7 3C12 3 12 6 12 9Z"/></svg>',
     beauty: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 11V4.8c0-.5.6-.9 1-.6l3.4 2.3c.3.2.4.5.4.8V11"/><rect x="8" y="11" width="8" height="4" rx="0.5"/><path d="M8.5 15h7v6h-7z"/></svg>',
+    acc: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l4 6-9 12L3 9Z"/><path d="M3 9h18"/><path d="M9.5 3 12 9l2.5-6"/><path d="M12 21 8.5 9"/><path d="m12 21 3.5-12"/></svg>',
   };
 
   function hashStr(str){
@@ -1369,12 +607,24 @@
     return h;
   }
 
+  function catList(s){
+    return s.cat.split(",").map(t => t.trim());
+  }
+
+  function iconFor(s){
+    const c = catList(s);
+    if (c.includes("Quà tặng")) return ICONS.gift;
+    if (c.includes("Phụ kiện")) return ICONS.acc;
+    if (c.includes("Mỹ phẩm")) return ICONS.beauty;
+    if (c.includes("Đồ nam") && !c.includes("Đồ nữ")) return ICONS.men;
+    return ICONS.women;
+  }
+
   function thumbHtml(s){
     const [c1, c2] = GRADIENTS[hashStr(s.brand) % GRADIENTS.length];
-    const icon = s.cat === "Quà tặng" ? ICONS.gift : s.cat === "Đồ nam" ? ICONS.men : s.cat === "Mỹ phẩm" ? ICONS.beauty : ICONS.women;
     const initial = s.brand.trim().charAt(0).toUpperCase();
     return `<div class="thumb" style="background:linear-gradient(155deg, ${c1}, ${c2})">
-      ${icon}
+      ${iconFor(s)}
       <span class="mono">${escapeHtml(initial)}</span>
     </div>`;
   }
@@ -1382,7 +632,7 @@
   function render(){
     const q = searchEl.value.trim().toLowerCase();
     const items = SHOPS.filter(s => {
-      if (activeFilter !== "all" && !s.cat.split(",").map(t => t.trim()).includes(activeFilter)) return false;
+      if (activeFilter !== "all" && !catList(s).includes(activeFilter)) return false;
       if (!q) return true;
       return (s.style + " " + s.brand + " " + s.note).toLowerCase().includes(q);
     });
@@ -1391,7 +641,8 @@
     emptyEl.hidden = items.length !== 0;
 
     listEl.innerHTML = items.map(s => {
-      const tagClass = s.cat === "Quà tặng" ? "gift" : s.cat === "Đồ nam" ? "men" : s.cat === "Mỹ phẩm" ? "beauty" : "";
+      const c = catList(s);
+      const tagClass = c.includes("Quà tặng") ? "gift" : c.includes("Phụ kiện") ? "acc" : c.includes("Mỹ phẩm") ? "beauty" : c.includes("Đồ nam") && !c.includes("Đồ nữ") ? "men" : "";
       return `
       <a class="card" href="${escapeHtml(s.link)}" target="_blank" rel="nofollow noopener">
         ${thumbHtml(s)}

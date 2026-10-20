@@ -1,0 +1,45 @@
+name: Sync Google Sheet
+
+# Tự động làm mới data.js từ Google Sheet "Tổng hợp shop đồ xinh" (@tulip27110):
+# - Thêm/sửa link trong các tab có sẵn: trang web đọc sheet trực tiếp mỗi lần mở,
+#   nên không cần đợi Action này.
+# - Action này đảm nhiệm: tab MỚI thêm vào sheet được nhận tự động (cập nhật danh
+#   sách tab trong data.js) + làm mới bản dữ liệu lưu sẵn trong trang.
+
+on:
+  schedule:
+    - cron: "0 */3 * * *"   # mỗi 3 giờ (UTC)
+  workflow_dispatch:         # cho phép bấm chạy tay trên tab Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-sheet
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Đồng bộ sheet -> data.js
+        run: node sync.mjs
+
+      - name: Commit nếu có thay đổi
+        run: |
+          git config user.name "sheet-sync[bot]"
+          git config user.email "actions@github.com"
+          git add data.js
+          if git diff --cached --quiet; then
+            echo "Sheet chưa có gì mới."
+          else
+            git commit -m "Cập nhật dữ liệu từ Google Sheet ($(date -u '+%H:%M UTC %d/%m/%Y'))"
+            git push
+          fi
